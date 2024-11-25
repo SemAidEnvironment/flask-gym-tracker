@@ -18,3 +18,5 @@ pytest-flask==1.2.0
 
 # Optional: For linting and code quality
 flake8==6.1.0
+
+gunicorn==20.1.0
