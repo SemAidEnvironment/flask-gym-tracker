@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercise_name }} Details{% endblock %}
+
+{% block content %}
+<h1>{{ exercise_name }} Details for {{ user.name }}</h1>
+
+<!-- Exercise Performance Chart -->
+<div class="chart-container">
+    <h2>Performance Over Time</h2>
+    {% if graph_data %}
+    <canvas id="performanceChart"></canvas>
+    {% else %}
+    <p>No performance data available for this exercise.</p>
+    {% endif %}
+</div>
+
+<!-- Performance History Table -->
+<div class="history-container">
+    <h2>Performance History</h2>
+    <table class="performance-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight (kg)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for performance in performances %}
+            <tr>
+                <td>{{ performance.workout.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ performance.sets }}</td>
+                <td>{{ performance.repetitions }}</td>
+                <td>{{ performance.weight }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- JavaScript to Render Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    {% if graph_data %}
+    const graphData = {{ graph_data|tojson }};
+    const labels = graphData.map(entry => entry[0]);  // Dates
+    const weights = graphData.map(entry => entry[1]); // Weights
+
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '{{ exercise_name }} Weight Progression',
+                data: weights,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Weight (kg)'
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

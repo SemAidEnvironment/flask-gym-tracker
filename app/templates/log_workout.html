@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Log Workout{% endblock %}
+
+{% block content %}
+<h1>Log Workout for {{ user.name }}</h1>
+
+<form method="POST">
+    <!-- Date Input -->
+    <div>
+        <label for="workout_date">Date:</label>
+        <input type="date" id="workout_date" name="workout_date" value="{{ now|strftime('%Y-%m-%d') }}" required>
+    </div>
+
+    <!-- Exercise Input Section -->
+    <div id="exercise-container">
+        <div class="exercise">
+            <h3>Exercise 1</h3>
+            <label>Choose an Exercise:
+                <select name="exercise_name" required onchange="fetchLastExercise(this)">
+                    <option value="" disabled selected>Select an exercise</option>
+                    {% for exercise in exercises %}
+                    <option value="{{ exercise }}">{{ exercise }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Sets: <input type="number" name="sets" required></label>
+            <label>Repetitions: <input type="number" name="reps" required></label>
+            <label>Weight (kg): <input type="number" step="0.1" name="weight" required></label>
+            <button type="button" class="remove-btn" onclick="removeExercise(this)">Remove</button>
+        </div>
+    </div>
+
+    <button type="button" id="add-exercise-btn">Add Another Exercise</button>
+    <button type="submit">Submit Workout</button>
+</form>
+
+<!-- JavaScript -->
+<script>
+    // Function to dynamically fetch and populate last logged exercise data
+    function fetchLastExercise(selectElement) {
+        const exerciseName = selectElement.value; // Get selected exercise name
+        const userId = {{ user.id }}; // User ID is passed dynamically from backend
+
+        // Fetch the last logged exercise data from the server
+        fetch(`/api/get_last_exercise/${userId}/${exerciseName}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data for ${exerciseName}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Populate the fields with fetched data
+                const parent = selectElement.closest('.exercise');
+                parent.querySelector('input[name="sets"]').value = data.sets || '';
+                parent.querySelector('input[name="reps"]').value = data.reps || '';
+                parent.querySelector('input[name="weight"]').value = data.weight || '';
+            })
+            .catch(error => {
+                console.error('Error fetching last exercise:', error);
+                alert('Could not fetch the most recent exercise data.');
+            });
+    }
+
+    // Function to add a new exercise row dynamically
+    document.getElementById('add-exercise-btn').addEventListener('click', function () {
+        const container = document.getElementById('exercise-container');
+        const count = container.children.length + 1;
+
+        const newExercise = document.createElement('div');
+        newExercise.classList.add('exercise');
+        newExercise.innerHTML = `
+            <h3>Exercise ${count}</h3>
+            <label>Choose an Exercise:
+                <select name="exercise_name" required onchange="fetchLastExercise(this)">
+                    <option value="" disabled selected>Select an exercise</option>
+                    {% for exercise in exercises %}
+                    <option value="{{ exercise }}">{{ exercise }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Sets: <input type="number" name="sets" required></label>
+            <label>Repetitions: <input type="number" name="reps" required></label>
+            <label>Weight (kg): <input type="number" step="0.1" name="weight" required></label>
+            <button type="button" class="remove-btn" onclick="removeExercise(this)">Remove</button>
+        `;
+        container.appendChild(newExercise);
+    });
+
+    // Function to remove an exercise row
+    function removeExercise(button) {
+        const exerciseDiv = button.closest('.exercise');
+        exerciseDiv.remove();
+    }
+</script>
+{% endblock %}

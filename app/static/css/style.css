@@ -1,0 +1,299 @@
+/* General Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #007bff;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #0056b3;
+}
+
+.navbar a.active {
+    background-color: #0056b3;
+}
+
+/* Content Container */
+.content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f4f4f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button Styling */
+button, a.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover, a.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Card Styling */
+.card {
+    background-color: white;
+    color: #333;
+    text-align: center;
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .user-section {
+        width: 100%;
+        height: auto;
+        padding: 40px 20px;
+    }
+}
+
+/* Main container styling */
+.container {
+    display: flex;
+    height: calc(100vh - 80px); /* Full height minus navbar */
+    overflow: hidden;
+}
+
+/* User sections */
+.user-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.user-section:hover {
+    transform: scale(1.05);
+}
+
+.zina {
+    background-color: #28a745; /* Green for Zina */
+}
+
+.sem {
+    background-color: #007bff; /* Blue for Sem */
+}
+
+/* Card styling */
+.card {
+    background-color: white;
+    color: #333;
+    text-align: center;
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.card p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .user-section {
+        width: 100%;
+        height: auto;
+        padding: 40px 20px;
+    }
+}
+/* Homepage Styling */
+.homepage {
+    text-align: center;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* User Sections */
+.user-sections {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.user-card {
+    flex: 1;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.user-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.user-card h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.user-card p {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.user-card.zina {
+    background: linear-gradient(45deg, #28a745, #64dd17);
+    color: white;
+}
+
+.user-card.sem {
+    background: linear-gradient(45deg, #007bff, #448aff);
+    color: white;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.buttons .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: white;
+    color: #333;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.buttons .btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-sections {
+        flex-direction: column;
+    }
+
+    .user-card {
+        margin-bottom: 20px;
+    }
+}

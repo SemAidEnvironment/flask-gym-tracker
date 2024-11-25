@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Predefined Workouts{% endblock %}
+
+{% block content %}
+<h1>Predefined Workouts</h1>
+
+<!-- Existing Workouts -->
+<section class="existing-workouts">
+    <h2>Existing Workouts</h2>
+    <ul>
+        {% for workout in predefined_workouts %}
+        <li>
+            <strong>{{ workout.name }}</strong>
+            <ul>
+                {% for exercise in workout.exercises %}
+                <li>{{ exercise.name }} - {{ exercise.sets }} sets of {{ exercise.reps }} reps @ {{ exercise.weight }} kg</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<!-- Add New Workout -->
+<section class="new-workout">
+    <h2>Define New Workout</h2>
+    <form method="POST">
+        <label for="workout_name">Workout Name: <input type="text" id="workout_name" name="workout_name" required></label>
+        <div id="exercise-container"></div>
+        <button type="button" id="add-exercise-btn">Add Exercise</button>
+        <button type="submit">Save Workout</button>
+    </form>
+</section>
+{% endblock %}

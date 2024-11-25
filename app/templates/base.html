@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gym Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="{{ url_for('main.home') }}">GymTracker</a>
+        </div>
+        <ul class="navbar-links">
+            <li><a href="{{ url_for('main.home') }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a></li>
+            <li><a href="{{ url_for('main.workouts') }}" class="{% if active_page == 'workouts' %}active{% endif %}">Workouts</a></li>
+            <li><a href="{{ url_for('main.user_page', user_id=g.user.id if g.user else 1) }}" class="{% if active_page == 'user_page' %}active{% endif %}">User Page</a></li>
+            <li><a href="{{ url_for('main.log_workout', user_id=g.user.id if g.user else 1) }}" class="{% if active_page == 'log_workout' %}active{% endif %}">Log Workout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
