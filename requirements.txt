@@ -1,5 +1,20 @@
-Flask
-Flask-SQLAlchemy
-Flask-WTF
-Flask-Migrate
-Matplotlib
+Flask==2.3.2
+Flask-SQLAlchemy==3.0.4
+Flask-Migrate==4.0.4
+Flask-WTF==1.1.1
+python-dotenv==1.0.0
+WTForms==3.0.1
+Jinja2==3.1.2
+
+# For working with charts and data visualization
+matplotlib==3.8.0
+
+# For security and hashing passwords
+bcrypt==4.0.1
+
+# Optional: For testing
+pytest==7.4.2
+pytest-flask==1.2.0
+
+# Optional: For linting and code quality
+flake8==6.1.0
