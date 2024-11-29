@@ -297,3 +297,15 @@ button:hover, a.btn:hover {
         margin-bottom: 20px;
     }
 }
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
