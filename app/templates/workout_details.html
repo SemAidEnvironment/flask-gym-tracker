@@ -29,4 +29,11 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Remove Workout Button -->
+<section>
+    <form method="POST" action="{{ url_for('main.delete_workout', workout_id=workout.id) }}">
+        <button type="submit" class="btn btn-danger">Remove Workout</button>
+    </form>
+</section>
 {% endblock %}
