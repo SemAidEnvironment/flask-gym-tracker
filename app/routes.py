@@ -20,24 +20,6 @@ def log_workout(user_id):
     # Load predefined workouts from the database
     predefined_workouts = PredefinedWorkout.query.all()
 
-    # Serialize predefined workouts into JSON-compatible dictionaries
-    def serialize_predefined_workout(workout):
-        return {
-            "id": workout.id,
-            "name": workout.name,
-            "exercises": [
-                {
-                    "name": exercise.name,
-                    "sets": exercise.sets,
-                    "repetitions": exercise.repetitions,
-                    "weight": exercise.weight
-                }
-                for exercise in workout.exercises
-            ]
-        }
-
-    serialized_workouts = [serialize_predefined_workout(workout) for workout in predefined_workouts]
-
     # Load exercises from JSON
     with open("exercises.json") as f:
         exercises = json.load(f)
@@ -74,12 +56,12 @@ def log_workout(user_id):
         db.session.commit()
 
         return redirect(url_for("main.home"))
-
     return render_template(
         "log_workout.html",
         user=user,
         exercises=exercises,
-        predefined_workouts=serialized_workouts
+        predefined_workouts=predefined_workouts,
+
     )
 
 
@@ -92,11 +74,11 @@ def user_page(user_id):
     exercises = set(exercise.name for workout in workouts for exercise in workout.exercises)
 
     # Generate calendar events
-    calendar_dates = [
+    calendar_events = [
         {
             "title": "Workout",
             "start": workout.date.strftime('%Y-%m-%d'),
-            "url": url_for('main.workout_details', user_id=user.id, workout_id=workout.id)
+            "url": url_for('main.workout_details', user_id=user_id, workout_id=workout.id),
         }
         for workout in workouts
     ]
@@ -106,7 +88,7 @@ def user_page(user_id):
         user=user,
         workouts=workouts,
         exercises=exercises,
-        calendar_dates=calendar_dates
+        calendar_events=calendar_events
     )
 
 
@@ -140,37 +122,10 @@ def workouts():
 
     # Load exercises from JSON
     with open("exercises.json") as f:
-        predefined_exercises = json.load(f)
-
-    # Handle POST request: Add a new predefined workout
-    if request.method == "POST":
-        name = request.form.get("workout_name")
-        exercises = request.form.getlist("exercise_name")
-        sets = request.form.getlist("sets")
-        reps = request.form.getlist("reps")
-        weights = request.form.getlist("weight")
-
-        # Create a new predefined workout entry
-        new_workout = PredefinedWorkout(name=name)
-        db.session.add(new_workout)
-        db.session.commit()
-
-        # Add exercises to the predefined workout
-        for i in range(len(exercises)):
-            workout_exercise = PredefinedWorkoutExercise(
-                name=exercises[i],
-                sets=int(sets[i]),
-                repetitions=int(reps[i]),
-                weight=float(weights[i]),
-                workout_id=new_workout.id
-            )
-            db.session.add(workout_exercise)
-        db.session.commit()
-
-        return redirect(url_for("main.workouts"))
+        exercises = json.load(f)
 
     return render_template("workouts.html", predefined_workouts=predefined_workouts,
-        predefined_exercises=predefined_exercises
+        exercises=exercises
 )
 
 
@@ -211,3 +166,95 @@ def get_last_exercise(user_id, exercise_name):
             "reps": 0,
             "weight": 0,
         })
+
+@main.route('/add_workout', methods=['POST'])
+def add_workout():
+
+    # Handle POST request: Add a new predefined workout
+    if request.method == "POST":
+
+        name = request.form.get("workout_name")
+
+        # Create a new predefined workout entry
+        new_workout = PredefinedWorkout(name=name)
+        db.session.add(new_workout)
+        db.session.commit()
+
+        exercises = request.form.getlist("exercise_name")
+        sets = request.form.getlist("sets")
+        reps = request.form.getlist("reps")
+        weights = request.form.getlist("weight")
+
+        # Add exercises to the predefined workout
+        for i in range(len(exercises)):
+            workout_exercise = PredefinedWorkoutExercise(
+                name=exercises[i],
+                sets=int(sets[i]),
+                repetitions=int(reps[i]),
+                weight=float(weights[i]),
+                workout_id=new_workout.id
+            )
+            db.session.add(workout_exercise)
+        db.session.commit()
+
+        return redirect(url_for("main.workouts"))
+
+
+
+        # Capture exercise details
+        selected_exercises = request.form.getlist("exercise_name")
+        sets = request.form.getlist("sets")
+        reps = request.form.getlist("reps")
+        weights = request.form.getlist("weight")
+
+        # Add exercises to the workout
+        for i in range(len(selected_exercises)):
+            exercise = Exercise(
+                name=selected_exercises[i],
+                sets=int(sets[i]),
+                repetitions=int(reps[i]),
+                weight=float(weights[i]),
+                workout_id=workout.id
+            )
+            db.session.add(exercise)
+        db.session.commit()
+@main.route('/remove_workout/<int:workout_id>', methods=['POST'])
+def remove_workout(workout_id):
+    workout = PredefinedWorkout.query.get_or_404(workout_id)
+
+    # Delete all associated exercises first
+    PredefinedWorkoutExercise.query.filter_by(workout_id=workout_id).delete()
+
+    # Delete the workout
+    db.session.delete(workout)
+    db.session.commit()
+
+    return redirect(url_for('main.workouts'))
+
+
+@main.route('/api/predefined_workout/<int:workout_id>', methods=['GET'])
+def get_predefined_workout(workout_id):
+    workout = PredefinedWorkout.query.get_or_404(workout_id)
+    exercises = [
+        {
+            "name": exercise.name,
+            "sets": exercise.sets,
+            "repetitions": exercise.repetitions,
+            "weight": exercise.weight,
+        }
+        for exercise in workout.exercises
+    ]
+    return jsonify({"name": workout.name, "exercises": exercises})
+
+
+@main.route('/delete_workout/<int:workout_id>', methods=['POST'])
+def delete_workout(workout_id):
+    workout = Workout.query.get_or_404(workout_id)
+
+    # Delete all associated exercises first
+    Exercise.query.filter_by(workout_id=workout.id).delete()
+
+    # Delete the workout
+    db.session.delete(workout)
+    db.session.commit()
+    return redirect(url_for('main.user_page', user_id=workout.user_id))
